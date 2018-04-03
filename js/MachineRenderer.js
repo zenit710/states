@@ -32,7 +32,7 @@ MachineRenderer.prototype.getStates = function () {
         this.states.push({
             id: ++this.statesCount,
             label: st.name,
-            shape: st.name == this.machine.startState.name ? 'box' : 'circle',
+            shape: st.name === this.machine.startState.name ? 'box' : 'circle',
             color: st.isValid ? 'lightgreen' : 'cyan'
         });
 
@@ -41,7 +41,7 @@ MachineRenderer.prototype.getStates = function () {
 };
 
 MachineRenderer.prototype.getRoutes = function () {
-    var i, st, route, rt, shared;
+    var i, j, st, route, rts, shared;
 
     for (i = 0; i < this.machine.states.length; i++) {
         st = this.machine.states[i];
@@ -49,12 +49,14 @@ MachineRenderer.prototype.getRoutes = function () {
 
         for (route in st.routes) {
             if (st.routes.hasOwnProperty(route)) {
-                rt = st.getFirstRoute(route);
+                rts = st.getAllRouteStates(route);
 
-                if (st.name === rt.name) {
-                    shared.push(route);
-                } else {
-                    this.routes.push(this.createRoute(st.name, rt.name, route));
+                for (j = 0; j < rts.length; j++) {
+                    if (st.name === rts[j].name) {
+                        shared.push(route);
+                    } else {
+                        this.routes.push(this.createRoute(st.name, rts[j].name, route));
+                    }
                 }
             }
         }
