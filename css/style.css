@@ -1,0 +1,37 @@
+.deterministic, .original {
+    display: none;
+}
+
+.original-content, .deterministic-content {
+    height: 400px;
+    border: 1px solid black;
+}
+
+.state-holder {
+    position: relative;
+}
+
+.add-route, .edit-state, .remove-state {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.add-route {
+    right: 80px;
+}
+
+.edit-state {
+    right: 40px;
+}
+
+.state-title {
+    font-weight: bold;
+}
+
+hr {
+    display: block;
+    width: 100%;
+    clear: both;
+    float: left;
+}

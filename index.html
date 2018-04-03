@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="vendor/vis/vis.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>Automaty</title>
+</head>
+<body>
+    <div class="col-md-10 col-md-offset-1">
+        <h1>Porównywanie automatów i sprowadzanie niedetermistycznych do deterministycznych</h1>
+        <hr />
+
+        <button class="btn btn-default col-md-12 compare-btn">Porównaj automaty</button>
+
+        <div class="alert col-md-12 comparison-result" style="height: 50px;"></div>
+        <hr />
+
+        <div class="wrapper">
+            <div id="machine-1" class="col-md-6">
+                <h2>Automat nr 1</h2>
+
+                <button class="test-machine-btn col-md-6">Testuj słowo automatem</button>
+                <button class="original-btn col-md-6">Wizualizuj</button>
+                <button class="deterministic-btn col-md-12">Pokaż deterministyczny odpowiednik</button>
+
+                <div class="alert alert-dismissible original" role="alert">
+                    <div>
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Oryginalny automat:</strong>
+                    </div>
+                    <div class="original-content"></div>
+                </div>
+
+                <div class="alert alert-dismissible deterministic" role="alert">
+                    <div>
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Deterministyczny automat:</strong>
+                    </div>
+                    <div class="deterministic-content"></div>
+                </div>
+
+                <hr />
+                <h3>Stany</h3>
+
+                <form class="add-state">
+                    <input name="name" placeholder="nazwa stanu" required />
+                    <input type="checkbox" name="valid" /> Akceptujący
+                    <input type="checkbox" name="start" /> Startowy
+                    <button type="submit" class="btn btn-success add-state-btn">Dodaj</button>
+                </form>
+
+                <div class="states"></div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div id="machine-2" class="col-md-6">
+                <h2>Automat nr 2</h2>
+
+                <button class="test-machine-btn col-md-6">Testuj słowo automatem</button>
+                <button class="original-btn col-md-6">Wizualizuj</button>
+                <button class="deterministic-btn col-md-12">Pokaż deterministyczny odpowiednik</button>
+
+                <div class="alert alert-dismissible original" role="alert">
+                    <div>
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Oryginalny automat:</strong>
+                    </div>
+                    <div class="original-content"></div>
+                </div>
+
+                <div class="alert alert-dismissible deterministic" role="alert">
+                    <div>
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Deterministyczny automat:</strong>
+                    </div>
+                    <div class="deterministic-content"></div>
+                </div>
+
+                <hr />
+                <h3>Stany</h3>
+
+                <form class="add-state">
+                    <input name="name" placeholder="nazwa stanu" required />
+                    <input type="checkbox" name="valid" /> Akceptujący
+                    <input type="checkbox" name="start" /> Startowy
+                    <button type="submit" class="btn btn-success add-state-btn">Dodaj</button>
+                </form>
+
+                <div class="states"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPDATE STATE MODAL -->
+    <div class="modal fade edit-modal" tabindex="-1" role="dialog"">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form class="update-state-form">
+                    <input class="update-state-current-name" name="currentName" type="hidden" />
+                    <input class="update-state-machine-name" name="machineName" type="hidden" />
+                    <input class="update-state-name" name="newName" placeholder="nazwa stanu" required />
+                    <input class="update-state-valid" type="checkbox" name="isValid" /> Akceptujący
+                    <input class="update-state-start" type="checkbox" name="isStart" /> Startowy
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default update-state-cancel-btn" data-dismiss="modal">Anuluj</button>
+                <button type="button" class="btn btn-primary update-state-btn">Zapisz</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- ROUTE ADD MODAL -->
+    <div class="modal fade route-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="route-add-form">
+                        <input class="route-state-name" name="stateName" type="hidden" />
+                        <input class="route-state-machine-name" name="machineName" type="hidden" />
+                        <input class="route-char" name="chars" placeholder="znak(i)" required />
+                        Do: <select class="route-state" name="toState"></select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default add-route-cancel-btn" data-dismiss="modal">Anuluj</button>
+                    <button type="button" class="btn btn-primary add-route-btn">Zapisz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="vendor/jquery-3.3.1.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/vis/vis.min.js"></script>
+    <script src="js/machine/ArrayComparison.js"></script>
+    <script src="js/machine/State.js"></script>
+    <script src="js/machine/CartesianStateRow.js"></script>
+    <script src="js/machine/MachineComparator.js"></script>
+    <script src="js/machine/MachineDeterminer.js"></script>
+    <script src="js/machine/Machine.js"></script>
+    <!--<script src="js/machine/Equality.tests.js"></script>-->
+    <!--<script src="js/machine/Determiner.tests.js"></script>-->
+    <script src="js/MachineRenderer.js"></script>
+    <script src="js/HTMLGenerator.js"></script>
+    <script src="js/modules/StateEdit.module.js"></script>
+    <script src="js/modules/AddRoute.module.js"></script>
+    <script src="js/modules/State.module.js"></script>
+    <script src="js/core.js"></script>
+</body>
+</html>
