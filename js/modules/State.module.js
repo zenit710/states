@@ -130,7 +130,7 @@ StateModule.prototype.printStates = function () {
 };
 
 StateModule.prototype.createStateElement = function (state) {
-    var stateElement = this.generator.createStateElement(state, (this.startState && state.name == this.startState.name)),
+    var stateElement = this.generator.createStateElement(state, (this.startState && state.name === this.startState.name)),
         routeButton = this.createRouteButton(state),
         editButton= this.createEditButton(state),
         removeButton = this.createRemoveButton(state),
@@ -183,7 +183,7 @@ StateModule.prototype.createEditButton = function (state) {
     $(button).click(function () {
         var stateName = $(this).data('statename'),
             state = self.getStateByName(stateName),
-            isStart = self.startState && state.name == self.startState.name;
+            isStart = self.startState && state.name === self.startState.name;
 
         self.stateEdit.fillForm(state.name, self.machineName, isStart, state.isValid);
         self.stateEdit.setStateName(state.name);
@@ -259,7 +259,7 @@ StateModule.prototype.updateStateByName = function (name, values) {
     state.name = values.name;
     state.isValid = values.isValid;
 
-    if (name != values.name) {
+    if (name !== values.name) {
         delete this.states[stateName];
     }
 
@@ -283,7 +283,7 @@ StateModule.prototype.removeRoute = function (name, route, toName) {
             }
         }
 
-        if (state.routes[route].length == 0) {
+        if (state.routes[route].length === 0) {
             delete state.routes[route];
         }
     }

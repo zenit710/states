@@ -8,6 +8,7 @@ var Machine = function (startState) {
     this.names = [startState.name];
     this.startState = startState;
     this.currentState = startState;
+    this.currentStates = [startState];
 };
 
 
@@ -46,21 +47,35 @@ Machine.prototype.getAllRouteNames = function () {
  * @returns {boolean}
  */
 Machine.prototype.check = function (series) {
-    if (typeof series != 'string') {
+    if (typeof series !== 'string') {
         return false;
     }
 
-    this.currentState = this.startState;
+    var self = this,
+        currentStates = this.currentStates = [this.startState],
+        i,
+        j;
 
     var charArray = series.split('');
 
-    for (var i = 0; i < charArray.length; i++) {
-        if (this.currentState.hasRoute(charArray[i])) {
-            this.currentState = this.currentState.getFirstRoute(charArray[i]);
-        } else return false;
+    for (i = 0; i < charArray.length; i++) {
+        currentStates = this.currentStates;
+        this.currentStates = [];
+
+        for (j = 0; j < currentStates.length; j++) {
+            this.currentStates = this.currentStates.concat(currentStates[j].getAllRouteStates(charArray[i]).filter(function (item) {
+                return self.currentStates.indexOfObject(item.name, 'name');
+            }));
+        }
+
+        if (this.currentStates.length === 0) return false;
     }
 
-    return this.currentState.isValid;
+    for (i = 0; i < this.currentStates.length; i++) {
+        if (this.currentStates[i].isValid) return true;
+    }
+
+    return false;
 };
 
 /**
@@ -69,7 +84,7 @@ Machine.prototype.check = function (series) {
  * @returns {boolean}
  */
 Machine.prototype.equals = function (machine) {
-    if (typeof machine != 'object' || machine.constructor.name != 'Machine') {
+    if (typeof machine !== 'object' || machine.constructor.name !== 'Machine') {
         return false;
     }
 
